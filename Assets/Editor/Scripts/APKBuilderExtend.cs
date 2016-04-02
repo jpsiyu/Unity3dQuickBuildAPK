@@ -51,23 +51,42 @@ public class APKBuilderExtend : Editor
         Http2,
         Http3,
     };
-        
+
+    private string appName = "MyApp";
+    private string appVersion = "0.73.2";
     #endregion
 
 
     #region update inspector
-    private float popupWidth = 150;
-
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
 
+        InspectorForProductName();
         InspectorForSDKPlatform();
         InspectorForServerAddr();
         InspectorForBuildOption();
         InspectorForRun();
     }
 
+
+    private void InspectorForProductName() {
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("AppName");
+        GUILayout.FlexibleSpace();
+        appName = GUILayout.TextField(appName, 10, GUILayout.Width(150));
+        GUILayout.EndHorizontal();
+
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("Version");
+        GUILayout.FlexibleSpace();
+        appVersion = GUILayout.TextField(appVersion, 10, GUILayout.Width(150));
+        GUILayout.EndHorizontal();
+    }
+
+    /// <summary>
+    /// For Run Button
+    /// </summary>
     private void InspectorForRun() {
         if (GUILayout.Button("Run...(^.^)", GUILayout.Width(100)))
         {

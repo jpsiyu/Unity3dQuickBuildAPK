@@ -264,13 +264,12 @@ public class APKBuilderExtend : Editor
         3. ant release -> apk       */
     private static string GetCMD() {
 
-        string cmdEnterFolder = "cd " + ProjectRootPath.Replace("/", "\\");
+        string cmd = "cd {0} && copy /n {1}* . && ant release";
+        cmd = string.Format(cmd,
+            ProjectRootPath.Replace("/", "\\"),
+            antPath.Replace("/", "\\"));
+        return cmd;
 
-        string cmdAntCopy = "&& copy /n " + antPath.Replace("/", "\\") + "*" + " .";
-
-        string cmdAntRelease = "&& ant release";
-
-        return cmdEnterFolder + cmdAntCopy + cmdAntRelease;
     }
 
     private static void RunCDMNoReturn() {

@@ -23,40 +23,82 @@ public class APKBuilderExtend : Editor
         Application.dataPath + "/../Ant/";
     #endregion
 
+    #region project args
+    BuildOption popupIndex = BuildOption.ExportAndPack;
+
+    enum BuildOption
+    {
+        ExportAndPack,
+        Export,
+        Pack,
+    };
+        
+    #endregion
+
 
     #region update inspector
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
 
-        GUILayout.Space(30);
-
-        if (GUILayout.Button("Export Project")) {
-            UnityEngine.Debug.Log("Start Exporting...");
-            EditorApplication.delayCall += ExportProject;
-            UnityEngine.Debug.Log("Finish Exporting!");
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("Build");
+        string[] popString = {BuildOption.ExportAndPack.ToString(), 
+                              BuildOption.Export.ToString(), 
+                              BuildOption.Pack.ToString()};
+        popupIndex = (BuildOption)EditorGUILayout.Popup((int)popupIndex, popString);
+        if (GUILayout.Button("Run")) {
+            Run();
         }
+        GUILayout.EndHorizontal();
 
-        GUILayout.Space(15);
+        //GUILayout.Space(30);
 
-        if (GUILayout.Button("BuildAPK")) {
-            UnityEngine.Debug.Log("Start Building...");
-            EditorApplication.delayCall += RunCMDThread;
-            //UnityEngine.Debug.Log("Finish Building!");
-        }
+        //if (GUILayout.Button("Export Project")) {
+        //    UnityEngine.Debug.Log("Start Exporting...");
+        //    EditorApplication.delayCall += ExportProject;
+        //    UnityEngine.Debug.Log("Finish Exporting!");
+        //}
 
-        GUILayout.Space(15);
+        //GUILayout.Space(15);
 
-        if (GUILayout.Button("Export And BuildAPK"))
-        {
-            UnityEngine.Debug.Log("Start Export And BuildAPK...");
-            EditorApplication.delayCall += ExportProject;
-            EditorApplication.delayCall += RunCMDThread;
-            //UnityEngine.Debug.Log("Finish Building!");
-        }
-        GUILayout.Space(30);
+        //if (GUILayout.Button("BuildAPK")) {
+        //    UnityEngine.Debug.Log("Start Building...");
+        //    EditorApplication.delayCall += RunCMDThread;
+        //    //UnityEngine.Debug.Log("Finish Building!");
+        //}
+
+        //GUILayout.Space(15);
+
+        //if (GUILayout.Button("Export And BuildAPK"))
+        //{
+        //    UnityEngine.Debug.Log("Start Export And BuildAPK...");
+        //    EditorApplication.delayCall += ExportProject;
+        //    EditorApplication.delayCall += RunCMDThread;
+        //    //UnityEngine.Debug.Log("Finish Building!");
+        //}
+        //GUILayout.Space(30);
     }
     #endregion
+
+    private void Run() {
+        UnityEngine.Debug.Log(string.Format("Start Run {0}", popupIndex.ToString()));
+        switch (popupIndex) { 
+            case BuildOption.ExportAndPack:
+                EditorApplication.delayCall += ExportProject;
+                EditorApplication.delayCall += RunCMDThread;
+                break;
+            case BuildOption.Export:
+                EditorApplication.delayCall += ExportProject;
+                break;
+            case BuildOption.Pack:
+                EditorApplication.delayCall += RunCMDThread;
+                break;
+            default:
+                break;
+        }
+        UnityEngine.Debug.Log("Run Finished");
+    }
 
     #region export as android project
     public static void ExportProject() {

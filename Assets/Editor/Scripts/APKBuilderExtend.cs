@@ -52,32 +52,6 @@ public class APKBuilderExtend : Editor
         }
         GUILayout.EndHorizontal();
 
-        //GUILayout.Space(30);
-
-        //if (GUILayout.Button("Export Project")) {
-        //    UnityEngine.Debug.Log("Start Exporting...");
-        //    EditorApplication.delayCall += ExportProject;
-        //    UnityEngine.Debug.Log("Finish Exporting!");
-        //}
-
-        //GUILayout.Space(15);
-
-        //if (GUILayout.Button("BuildAPK")) {
-        //    UnityEngine.Debug.Log("Start Building...");
-        //    EditorApplication.delayCall += RunCMDThread;
-        //    //UnityEngine.Debug.Log("Finish Building!");
-        //}
-
-        //GUILayout.Space(15);
-
-        //if (GUILayout.Button("Export And BuildAPK"))
-        //{
-        //    UnityEngine.Debug.Log("Start Export And BuildAPK...");
-        //    EditorApplication.delayCall += ExportProject;
-        //    EditorApplication.delayCall += RunCMDThread;
-        //    //UnityEngine.Debug.Log("Finish Building!");
-        //}
-        //GUILayout.Space(30);
     }
     #endregion
 

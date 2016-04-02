@@ -54,6 +54,28 @@ public class APKBuilderExtend : Editor
 
     private string appName = "MyApp";
     private string appVersion = "0.73.2";
+
+
+    private struct Advance {
+        public bool showAdvance;
+        public bool copySDK;
+        public bool copyRes;
+        public bool stopMultiTouch;
+        public bool enableDebug;
+
+        public void SetDefault() {
+            showAdvance = false;
+            copySDK = true;
+            copyRes = true;
+            stopMultiTouch = false;
+            enableDebug = false;
+        }
+    };
+
+    private Advance advanceOption;
+
+    private int counter = 0;
+
     #endregion
 
 
@@ -66,10 +88,52 @@ public class APKBuilderExtend : Editor
         InspectorForSDKPlatform();
         InspectorForServerAddr();
         InspectorForBuildOption();
+        InspectorForAdvance();
+        InspectorForCounter();
         InspectorForRun();
     }
 
 
+    /// <summary>
+    /// For Counter
+    /// </summary>
+    private void InspectorForCounter() {
+        GUILayout.BeginHorizontal();
+        GUILayout.Label(string.Format("Counter: {0}", counter.ToString()));
+        if (GUILayout.Button("Reset")) {
+            ResetCounter();
+        }
+        GUILayout.EndHorizontal();
+    }
+
+    /// <summary>
+    /// For Advance
+    /// </summary>
+    private void InspectorForAdvance() {
+        advanceOption.showAdvance = GUILayout.Toggle(advanceOption.showAdvance, "Advance");
+        if (advanceOption.showAdvance)
+        {
+            GUILayout.BeginHorizontal();
+            GUILayout.Space(20);
+            advanceOption.copySDK = GUILayout.Toggle(advanceOption.copySDK, "CopySDK");
+            advanceOption.copyRes = GUILayout.Toggle(advanceOption.copyRes, "CopyRes");
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Space(20);
+            advanceOption.enableDebug = GUILayout.Toggle(advanceOption.enableDebug, "EnableDebug");
+            advanceOption.stopMultiTouch = GUILayout.Toggle(advanceOption.stopMultiTouch, "StopMultiTouch");
+            GUILayout.EndHorizontal();
+        }
+        else {
+            advanceOption.SetDefault();
+        }
+
+    }
+
+    /// <summary>
+    /// For User Input
+    /// </summary>
     private void InspectorForProductName() {
         GUILayout.BeginHorizontal();
         GUILayout.Label("AppName");
@@ -91,7 +155,16 @@ public class APKBuilderExtend : Editor
         if (GUILayout.Button("Run...(^.^)", GUILayout.Width(100)))
         {
             Run();
+            IncreCounter();
         }
+    }
+
+    private void IncreCounter() {
+        counter++;
+    }
+
+    private void ResetCounter() {
+        counter = 0;
     }
 
     /// <summary>

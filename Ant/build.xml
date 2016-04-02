@@ -133,4 +133,8 @@
         <echo file="local.properties" message="${settings}" append="false" />
     </target>
 
+    <target name="modi">
+        <echo file="modi.properties" message="test" />
+    </target>
+
 </project>

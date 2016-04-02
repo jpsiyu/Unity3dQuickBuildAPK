@@ -12,9 +12,11 @@ public class APKBuilderExtend : Editor
 
     #region setting path
     private static string productName = PlayerSettings.productName;
+    private const string projectDirName = "AndroidProject";
 
-    private static string AndroidProjectPath = 
-        Application.dataPath + "/../AndroidProject/";
+    private static string AndroidProjectPath = string.Format("{0}/../{1}/",
+        Application.dataPath,
+        projectDirName);
 
     private static string ProjectRootPath = 
         AndroidProjectPath + productName + "\\";
@@ -91,6 +93,9 @@ public class APKBuilderExtend : Editor
         InspectorForAdvance();
         InspectorForCounter();
         InspectorForRun();
+
+
+
     }
 
 
@@ -239,14 +244,17 @@ public class APKBuilderExtend : Editor
 
     #region export as android project
     public static void ExportProject() {
-        string[] levels = new string[] { 
-            "Assets/Scenes/Main.unity", 
-            "Assets/Scenes/Copy.unity"
-        };
+
+        int len = EditorBuildSettings.scenes.Length;
+        string[] levels = new string[len];
+        for(int i=0; i<len; i++){
+            levels[i] = EditorBuildSettings.scenes[i].path;
+        }
+
 
         BuildPipeline.BuildPlayer(
             levels,
-            Application.dataPath + "/../AndroidProject/",
+            AndroidProjectPath,
             BuildTarget.Android,
             BuildOptions.AcceptExternalModificationsToPlayer);
     }

@@ -142,13 +142,13 @@
 
         <replaceregexp flags="g" byline="false">  
             <regexp pattern='versionName=".*?"' />  
-            <substitution expression='versionName="0.73.4"' /> 
+            <substitution expression='versionName="${version_name}"' /> 
             <fileset dir="" includes="AndroidManifest.xml" />  
         </replaceregexp>
 
         <replaceregexp flags="g" byline="false">  
             <regexp pattern='versionCode=".*?"' />  
-            <substitution expression='versionName="2"' /> 
+            <substitution expression='versionCode="${version_code}"' /> 
             <fileset dir="" includes="AndroidManifest.xml" />  
         </replaceregexp>
     </target>

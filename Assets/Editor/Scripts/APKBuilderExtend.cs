@@ -26,8 +26,10 @@ public class APKBuilderExtend : Editor
     #endregion
 
     #region project args
-    private static string sdk_path;
-    private static string app_name;
+    private string sdkPath;
+    private string appName = PlayerSettings.productName;
+    private string appVersionName = "0.73.2";
+
 
     BuildOption buildIndex = BuildOption.ExportAndPack;
 
@@ -58,8 +60,6 @@ public class APKBuilderExtend : Editor
         Http3,
     };
 
-    private string appName = "MyApp";
-    private string appVersion = "0.73.2";
 
 
     private struct Advance {
@@ -145,13 +145,13 @@ public class APKBuilderExtend : Editor
         GUILayout.BeginHorizontal();
         GUILayout.Label("AppName");
         GUILayout.FlexibleSpace();
-        appName = GUILayout.TextField(appName, 10, GUILayout.Width(150));
+        appName = GUILayout.TextField(appName, 15, GUILayout.Width(150));
         GUILayout.EndHorizontal();
 
         GUILayout.BeginHorizontal();
         GUILayout.Label("Version");
         GUILayout.FlexibleSpace();
-        appVersion = GUILayout.TextField(appVersion, 10, GUILayout.Width(150));
+        appVersionName = GUILayout.TextField(appVersionName, 10, GUILayout.Width(150));
         GUILayout.EndHorizontal();
     }
 
@@ -224,8 +224,7 @@ public class APKBuilderExtend : Editor
     private void Run() {
 
         // get last info
-        sdk_path = EditorPrefs.GetString("AndroidSdkRoot");
-        app_name = PlayerSettings.productName;
+        sdkPath = EditorPrefs.GetString("AndroidSdkRoot");
 
         string log = "Start Run:{0},{1},{2}";
         UnityEngine.Debug.Log(string.Format(
@@ -274,13 +273,13 @@ public class APKBuilderExtend : Editor
 
 
     #region run cmd and use ant release to do package
-    private static void PackThread() {
+    private void PackThread() {
 
         Thread thread = new Thread(new ThreadStart(Pack));
         thread.Start();
     }
 
-    private static void ModiThread()
+    private void ModiThread()
     {
         Thread thread = new Thread(new ThreadStart(Modi));
         thread.Start();
@@ -289,14 +288,12 @@ public class APKBuilderExtend : Editor
     /*  1. enter exported project root
         2. copy ant file
         3. ant release -> apk       */
-    private static string GetPackCMD() {
+    private string GetPackCMD() {
 
-        string cmdCD = string.Format("cd {0} && copy /n {1}* . ",
-            ProjectRootPath.Replace("/", "\\"), 
-            antPath.Replace("/", "\\"));
+        string cmdCD = string.Format("cd {0} ", ProjectRootPath.Replace("/", "\\"));
 
         string cmdEchoFile = string.Format("ant echo_file -Dsdk_path={0} -Dapp_name={1}",
-            sdk_path, app_name);
+            sdkPath, appName);
 
         string cmdRelease = "ant release";
 
@@ -304,18 +301,19 @@ public class APKBuilderExtend : Editor
             cmdCD, cmdEchoFile, cmdRelease);
     }
 
-    private static string GetModiCMD() {
-        return string.Format("cd {0} && ant modi", ProjectRootPath);
+    private string GetModiCMD() {
+        return string.Format("cd {0} && copy /n {1}* . && ant modi -Dversion_name={2} -Dversion_code={3}",
+            ProjectRootPath.Replace("/", "\\"), antPath.Replace("/", "\\"), appVersionName, 2);
     }
 
 
     /* use a thread to do this (don't block main thread )*/
-    private static void Pack() {
+    private void Pack() {
         string cmd = GetPackCMD();
         NewProcess(cmd);
     }
 
-    private static void Modi() {
+    private void Modi() {
         string cmd = GetModiCMD();
         NewProcess(cmd);
     }

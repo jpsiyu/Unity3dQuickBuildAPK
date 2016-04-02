@@ -26,6 +26,9 @@ public class APKBuilderExtend : Editor
     #endregion
 
     #region project args
+    private static string sdk_path;
+    private static string app_name;
+
     BuildOption buildIndex = BuildOption.ExportAndPack;
 
     enum BuildOption
@@ -93,8 +96,6 @@ public class APKBuilderExtend : Editor
         InspectorForAdvance();
         InspectorForCounter();
         InspectorForRun();
-
-
 
     }
 
@@ -263,7 +264,9 @@ public class APKBuilderExtend : Editor
 
     #region run cmd and use ant release to do package
     public static void RunCMDThread() {
-        Thread thread = new Thread(new ThreadStart(RunCDMNoReturn));
+        sdk_path = EditorPrefs.GetString("AndroidSdkRoot");
+        app_name = PlayerSettings.productName;
+        Thread thread = new Thread(new ThreadStart(RunCMD));
         thread.Start();
     }
 
@@ -272,22 +275,22 @@ public class APKBuilderExtend : Editor
         3. ant release -> apk       */
     private static string GetCMD() {
 
-        string cmd = "cd {0} && copy /n {1}* . && ant release";
-        cmd = string.Format(cmd,
-            ProjectRootPath.Replace("/", "\\"),
+        string cmdCD = string.Format("cd {0} && copy /n {1}* . ",
+            ProjectRootPath.Replace("/", "\\"), 
             antPath.Replace("/", "\\"));
-        return cmd;
 
+        string cmdEchoFile = string.Format("ant echo_file -Dsdk_path={0} -Dapp_name={1}",
+            sdk_path, app_name);
+
+        string cmdRelease = "ant release";
+
+        return string.Format("{0} && {1} && {2}",
+            cmdCD, cmdEchoFile, cmdRelease);
     }
 
-    private static void RunCDMNoReturn() {
-        string log = RunCMD();
-        UnityEngine.Debug.Log(log);
-        UnityEngine.Debug.Log("Finish Building!");
-    }
 
     /* use a thread to do this (don't block main thread )*/
-    private static string RunCMD() {
+    private static void RunCMD() {
         string cmd = GetCMD();
         Process p = new Process();
 
@@ -300,7 +303,7 @@ public class APKBuilderExtend : Editor
         p.StartInfo.CreateNoWindow = false;
 
         p.Start();
-        return p.StandardOutput.ReadToEnd();
+        string log =  p.StandardOutput.ReadToEnd();
     }
     #endregion
 }

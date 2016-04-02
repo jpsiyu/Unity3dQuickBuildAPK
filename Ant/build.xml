@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="GravitySensor" default="help">
+<project>
 
     <!-- The local.properties file is created and updated by the 'android' tool.
          It contains the path to the SDK. It should *NOT* be checked into
@@ -116,5 +116,21 @@
             file="bin/${ant.project.name}-release.apk"/> 
 
     </target>   
+
+    <target name="echo_file">
+        <property name="setting_1" value="#Gen By Build.xml${line.separator}" />
+        <property name="setting_2" value="key.store=./MySign${line.separator}" />
+        <property name="setting_3" value="key.store.password=123456${line.separator}" />
+        <property name="setting_4" value="key.alias=MySign${line.separator}" />
+        <property name="setting_5" value="key.alias.password=123456${line.separator}" />
+        <property name="setting_6" value="market_channels=91,360,wandoujia,baidu${line.separator}" />
+        <property name="setting_7" value="version=1.2.1${line.separator}" />
+        <property name="setting_8" value="ant.project.name=${app_name}${line.separator}" />
+        <property name="setting_9" value="sdk.dir=${sdk_path}${line.separator}" />
+
+        <property name="settings" value="${setting_1}${setting_2}${setting_3}${setting_4}${setting_5}${setting_6}${setting_7}${setting_8}${setting_9}"/>
+
+        <echo file="local.properties" message="${settings}" append="false" />
+    </target>
 
 </project>

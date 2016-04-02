@@ -236,6 +236,7 @@ public class APKBuilderExtend : Editor
         switch (buildIndex) { 
             case BuildOption.ExportAndPack:
                 EditorApplication.delayCall += ExportProject;
+                EditorApplication.delayCall += ModiThread;
                 EditorApplication.delayCall += PackThread;
                 break;
             case BuildOption.Export:

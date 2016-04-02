@@ -134,7 +134,23 @@
     </target>
 
     <target name="modi">
-        <echo file="modi.properties" message="test" />
+        <replaceregexp flags="g" byline="false">  
+            <regexp pattern='android:debuggable="false"' />  
+            <substitution expression='android:debuggable="true"' /> 
+            <fileset dir="" includes="AndroidManifest.xml" />  
+        </replaceregexp>
+
+        <replaceregexp flags="g" byline="false">  
+            <regexp pattern='versionName=".*?"' />  
+            <substitution expression='versionName="0.73.4"' /> 
+            <fileset dir="" includes="AndroidManifest.xml" />  
+        </replaceregexp>
+
+        <replaceregexp flags="g" byline="false">  
+            <regexp pattern='versionCode=".*?"' />  
+            <substitution expression='versionName="2"' /> 
+            <fileset dir="" includes="AndroidManifest.xml" />  
+        </replaceregexp>
     </target>
 
 </project>

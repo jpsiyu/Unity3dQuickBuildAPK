@@ -24,7 +24,7 @@ public class APKBuilderExtend : Editor
     #endregion
 
     #region project args
-    BuildOption popupIndex = BuildOption.ExportAndPack;
+    BuildOption buildIndex = BuildOption.ExportAndPack;
 
     enum BuildOption
     {
@@ -32,32 +32,103 @@ public class APKBuilderExtend : Editor
         Export,
         Pack,
     };
+
+    BuildSDKPlatform sdkIndex = BuildSDKPlatform.YinHan;
+    enum BuildSDKPlatform
+    {
+        YinHan,
+        FeiYu,
+        UC,
+        QQ,
+        Wechat,
+        SDK_91,
+    };
+
+    ServerAddr addrIndex = ServerAddr.Http1;
+    enum ServerAddr
+    {
+        Http1,
+        Http2,
+        Http3,
+    };
         
     #endregion
 
 
     #region update inspector
+    private float popupWidth = 150;
+
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
 
+        InspectorForSDKPlatform();
+        InspectorForServerAddr();
+        InspectorForBuildOption();
+        InspectorForRun();
+    }
+
+    private void InspectorForRun() {
+        if (GUILayout.Button("Run...(^.^)", GUILayout.Width(100)))
+        {
+            Run();
+        }
+    }
+
+    /// <summary>
+    /// For Server Addr
+    /// </summary>
+    private void InspectorForServerAddr() {
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("SAddr");
+        GUILayout.FlexibleSpace();
+        string[] popString = {ServerAddr.Http1.ToString(),
+                             ServerAddr.Http2.ToString(),
+                             ServerAddr.Http3.ToString()};
+        addrIndex = (ServerAddr)EditorGUILayout.Popup((int)addrIndex, popString);
+        GUILayout.EndHorizontal();
+    }
+
+    /// <summary>
+    /// For SDK Platform
+    /// </summary>
+    private void InspectorForSDKPlatform() {
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("SDK");
+        GUILayout.FlexibleSpace();
+        string[] popString = {BuildSDKPlatform.YinHan.ToString(),
+                             BuildSDKPlatform.FeiYu.ToString(),
+                             BuildSDKPlatform.QQ.ToString(),
+                             BuildSDKPlatform.Wechat.ToString(),
+                             BuildSDKPlatform.UC.ToString(),
+                             BuildSDKPlatform.SDK_91.ToString()};
+        sdkIndex = (BuildSDKPlatform)EditorGUILayout.Popup((int)sdkIndex, popString);
+        GUILayout.EndHorizontal();
+    }
+
+    /// <summary>
+    /// For Build Option
+    /// </summary>
+    private void InspectorForBuildOption() {
         GUILayout.BeginHorizontal();
         GUILayout.Label("Build");
+        GUILayout.FlexibleSpace();
         string[] popString = {BuildOption.ExportAndPack.ToString(), 
                               BuildOption.Export.ToString(), 
                               BuildOption.Pack.ToString()};
-        popupIndex = (BuildOption)EditorGUILayout.Popup((int)popupIndex, popString);
-        if (GUILayout.Button("Run")) {
-            Run();
-        }
+        buildIndex = (BuildOption)EditorGUILayout.Popup((int)buildIndex, popString);
         GUILayout.EndHorizontal();
-
     }
     #endregion
 
     private void Run() {
-        UnityEngine.Debug.Log(string.Format("Start Run {0}", popupIndex.ToString()));
-        switch (popupIndex) { 
+        string log = "Start Run:{0},{1},{2}";
+        UnityEngine.Debug.Log(string.Format(
+            log, 
+            addrIndex.ToString(),
+            sdkIndex.ToString(),
+            buildIndex.ToString()));
+        switch (buildIndex) { 
             case BuildOption.ExportAndPack:
                 EditorApplication.delayCall += ExportProject;
                 EditorApplication.delayCall += RunCMDThread;
